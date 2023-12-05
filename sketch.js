@@ -17,6 +17,33 @@ function preload() {
   data = loadTable("assets/climategate-year-month.csv", "csv", "header");
 }
 
+function calcXY() {
+  let X = [];
+  let Y = [];
+  let i = 0;
+  for (let year = 1996; year < 2010; year++) {
+    let cpt = 0;
+    let totSize = 0;
+    while (
+      year == parseInt(data.getString(i, "year")) &&
+      i < data.getRowCount() - 1
+    ) {
+      console.log(parseInt(data.getString(i, "year")));
+      i++;
+      cpt++;
+      totSize += parseFloat(data.getString(i, "size"));
+      //   totSize += new Number(data.getString(i, "size"));
+    }
+    totSize /= cpt;
+
+    X.push(totSize);
+    Y.push(cpt);
+    console.log(X);
+    console.log(Y);
+  }
+  return [X, Y];
+}
+
 function drawGraph() {
   background(255);
 
@@ -24,20 +51,6 @@ function drawGraph() {
   let margin = 50;
   width = width - 2 * margin;
   height = height - 2 * margin;
-
-  //   // Trouver la plage de dates
-  //   let dates = data
-  //     .getColumn("year")
-  //     .map(
-  //       (year, index) => year + data.getString(index, "month").padStart(2, "0")
-  //     );
-  //   let minDate = min(dates);
-  //   let maxDate = max(dates);
-
-  //   // Convertir les dates en pixels
-  //   let xScale = width / (dates.length - 1);
-  //   let yScale =
-  //     height / (max(data.getColumn("size")) - min(data.getColumn("size")));
 
   // Dessiner l'axe des x
   stroke(0);
@@ -49,41 +62,21 @@ function drawGraph() {
   // Dessiner le graphique
   noFill();
   beginShape();
-  let xvalues = [];
-  let dates = [];
+  let res = calcXY();
+  let X = res[0];
+  let Y = res[1];
+  console.log(res);
 
-  let alreadyAffiched = "";
-  for (let i = 0; i < data.getRowCount(); i++) {
-    let x = map(i, 0, data.getRowCount() - 1, margin, width + margin);
-    let y = map(
-      log(data.getNum(i, "size")),
-      log(min(data.getColumn("size"))),
-      log(max(data.getColumn("size"))),
-      height + margin,
-      margin
-    );
+  for (let i = 0; i < X.length; i++) {
+    let x = map(X[i], min(X), max(X), margin, width + margin);
+    let y = map(Y[i], min(Y), max(Y), height + margin, margin);
 
     ellipse(x, y, 10);
-
-    let date = data.getString(i, "year");
-    if (!alreadyAffiched.includes(date)) {
-      text(date, x, height + margin + 10);
-      console.log(date);
-      alreadyAffiched += " " + date;
-    }
   }
   endShape();
 
   // Étiquettes des axes
   fill(0);
-  //   textAlign(CENTER, CENTER);
-  //   textSize(12);
-  // Étiquettes de l'axe des x
-  //   for (let i = 0; i < data.getRowCount(); i++) {
-  //     let x = map(i, 0, data.getRowCount() - 1, margin, width + margin);
-  //     let file = data.getString(i, "file").replace(".txt", "");
-  //     file = parseInt(file);
-  //   }
 
   // Étiquettes de l'axe des y
   rotate(radians(-90));
