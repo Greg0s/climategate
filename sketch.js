@@ -25,19 +25,19 @@ function drawGraph() {
   width = width - 2 * margin;
   height = height - 2 * margin;
 
-  // Trouver la plage de dates
-  let dates = data
-    .getColumn("year")
-    .map(
-      (year, index) => year + data.getString(index, "month").padStart(2, "0")
-    );
-  let minDate = min(dates);
-  let maxDate = max(dates);
+  //   // Trouver la plage de dates
+  //   let dates = data
+  //     .getColumn("year")
+  //     .map(
+  //       (year, index) => year + data.getString(index, "month").padStart(2, "0")
+  //     );
+  //   let minDate = min(dates);
+  //   let maxDate = max(dates);
 
-  // Convertir les dates en pixels
-  let xScale = width / (dates.length - 1);
-  let yScale =
-    height / (max(data.getColumn("size")) - min(data.getColumn("size")));
+  //   // Convertir les dates en pixels
+  //   let xScale = width / (dates.length - 1);
+  //   let yScale =
+  //     height / (max(data.getColumn("size")) - min(data.getColumn("size")));
 
   // Dessiner l'axe des x
   stroke(0);
@@ -49,33 +49,41 @@ function drawGraph() {
   // Dessiner le graphique
   noFill();
   beginShape();
+  let xvalues = [];
+  let dates = [];
+
+  let alreadyAffiched = "";
   for (let i = 0; i < data.getRowCount(); i++) {
     let x = map(i, 0, data.getRowCount() - 1, margin, width + margin);
     let y = map(
-      data.getNum(i, "size"),
-      min(data.getColumn("size")),
-      max(data.getColumn("size")),
+      log(data.getNum(i, "size")),
+      log(min(data.getColumn("size"))),
+      log(max(data.getColumn("size"))),
       height + margin,
       margin
     );
-    vertex(x, y);
+
+    ellipse(x, y, 10);
+
+    let date = data.getString(i, "year");
+    if (!alreadyAffiched.includes(date)) {
+      text(date, x, height + margin + 10);
+      console.log(date);
+      alreadyAffiched += " " + date;
+    }
   }
   endShape();
 
   // Étiquettes des axes
   fill(0);
-  textAlign(CENTER, CENTER);
-  textSize(12);
-
+  //   textAlign(CENTER, CENTER);
+  //   textSize(12);
   // Étiquettes de l'axe des x
-  for (let i = 0; i < data.getRowCount(); i++) {
-    let x = map(i, 0, data.getRowCount() - 1, margin, width + margin);
-    let date =
-      data.getString(i, "year") +
-      "-" +
-      data.getString(i, "month").padStart(2, "0");
-    text(date, x, height + margin + 10);
-  }
+  //   for (let i = 0; i < data.getRowCount(); i++) {
+  //     let x = map(i, 0, data.getRowCount() - 1, margin, width + margin);
+  //     let file = data.getString(i, "file").replace(".txt", "");
+  //     file = parseInt(file);
+  //   }
 
   // Étiquettes de l'axe des y
   rotate(radians(-90));
@@ -83,7 +91,7 @@ function drawGraph() {
 }
 
 function setup() {
-  createCanvas(960, 300);
+  createCanvas(960, 700);
   noStroke();
 
   drawGraph();
