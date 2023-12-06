@@ -2,7 +2,64 @@ html,
 body {
   margin: 0;
   padding: 0;
+  background-color: #4b4b4b;
+
+  font-family: "Barlow", "sans-serif";
 }
 canvas {
   display: block;
+}
+
+h1 {
+  color: white;
+  position: absolute;
+
+  bottom: 3rem;
+  left: 1rem;
+
+  max-width: 12rem;
+
+  font-weight: 600;
+  font-size: 1.4rem;
+
+  opacity: 0.8;
+}
+
+.caption {
+  position: absolute;
+  bottom: 1rem;
+  left: 1rem;
+
+  width: 10rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.5rem;
+
+  color: white;
+  background: linear-gradient(0.75turn, #df4949, #4949df);
+
+  display: flex;
+  justify-content: space-between;
+}
+
+footer {
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+
+  width: fit-content;
+
+  color: white;
+}
+
+footer a {
+  color: white;
+  text-decoration: none;
+
+  transition: all ease 0.3s;
+
+  opacity: 0.35;
+}
+
+footer a:hover {
+  opacity: 1;
 }
